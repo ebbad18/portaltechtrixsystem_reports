@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include portaltechtrixsystem_reports *.css
+recursive-include portaltechtrixsystem_reports *.csv
+recursive-include portaltechtrixsystem_reports *.html
+recursive-include portaltechtrixsystem_reports *.ico
+recursive-include portaltechtrixsystem_reports *.js
+recursive-include portaltechtrixsystem_reports *.json
+recursive-include portaltechtrixsystem_reports *.md
+recursive-include portaltechtrixsystem_reports *.png
+recursive-include portaltechtrixsystem_reports *.py
+recursive-include portaltechtrixsystem_reports *.svg
+recursive-include portaltechtrixsystem_reports *.txt
+recursive-exclude portaltechtrixsystem_reports *.pyc

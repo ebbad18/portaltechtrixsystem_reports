@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .address {
+            margin-bottom: 10px;
+        }
+
+        .address p {
+            margin: 0;
+        }
+
+        .contact-info {
+            margin-bottom: 10px;
+        }
+
+        .contact-info p {
+            margin: 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .date {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .print-format {
+            padding: 1mm;
+            font-size: 11.0pt !important;
+        }
+
+        .print-format td {
+            vertical-align: middle !important;
+            padding-top: 3px !important; /* Adjust top padding */
+            padding-bottom: 3px !important; /* Adjust bottom padding */
+        }
+
+        th, td {
+            border: 1.5px solid #575454 !important; /* Set border width to 1.5px */
+            padding-left: 3px !important; /* Adjust left padding */
+            padding-right: 3px !important; /* Adjust right padding */
+        }
+
+        th {
+            background-color: transparent !important;
+            color: #000000 !important;
+            font-weight: bold !important;
+            text-align: left; /* Align header text to the left */
+        }
+
+        tr:last-child {
+            font-weight: bold !important;
+        }
+    </style>
+
+</head>
+<body>
+<div class="address">
+    <div style="text-align: center;font-size: 22px;font-weight: bold;">FINE TECH</div>
+    <div style="text-align: center;">SASI HOME # 6, PLOT G/18, CH. KHALIQ-UZ-ZAMAN ROAD, CLIFTON, BLOCK VIII, KARACHI
+    </div>
+</div>
+<div class="contact-info">
+    <div style="text-align: center;">Phone: +9221 32275951-4</div>
+    <div style="text-align: center;">Email: info@techtrix.com.pk</div>
+</div>
+<div class="header">
+    <p class="title">Customer-wise Invoice Settlement</p>
+    <p class="date">As of {%= frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string()) %}</p>
+</div>
+<table class="print-format">
+    <thead>
+    <tr>
+        <th style="width: 17%; text-align: left;">Customer</th>
+        <th style="width: 9%; text-align: left;">Trans. No.</th>
+        <th style="width: 8%; text-align: left;">Trans. Date</th>
+        <th style="width: 8%; text-align: left;">Ref. No.</th>
+        <th style="width: 8%; text-align: left;">Due Date</th>
+        <th style="width: 8%; text-align: left;">Currency</th>
+        <th style="width: 8%; text-align: right;">Invoice Amount</th>
+        <th style="width: 8%; text-align: right;">Settled Amount</th>
+        <th style="width: 8%; text-align: right;">Balance Amount</th>
+        <th style="width: 8%; text-align: right;">Payment Days</th>
+        <th style="width: 10%; text-align: left;">Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in data %}
+        <tr>
+            <td style="text-align: left;"><b>{{ row.customer }}</b></td>
+            <td style="text-align: left;">{{ row.trans_no }}</td>
+            <td style="text-align: left;">{%=frappe.datetime.str_to_user(row.trans_date) %}</td>
+            <td style="text-align: left;">{{ row.ref_no }}</td>
+            <td style="text-align: left;">{%= frappe.datetime.str_to_user(row.due_date) %}</td>
+            <td style="text-align: right;">{{ row.currency }}</td>
+            <td style="text-align: right;">{{ row.inv_amount }}</td>
+            <td style="text-align: right;">{{ row.settled_amount }}</td>
+            <td style="text-align: right;">{{ row.balance_amount }}</td>
+            <td style="text-align: right;">{{ row.payment_days }}</td>
+            <td style="text-align: left;">{{ row.status }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
