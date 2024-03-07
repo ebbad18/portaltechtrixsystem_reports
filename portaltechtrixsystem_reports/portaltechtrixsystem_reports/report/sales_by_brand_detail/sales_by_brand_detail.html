@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .address {
+            margin-bottom: 10px;
+        }
+
+        .address p {
+            margin: 0;
+        }
+
+        .contact-info {
+            margin-bottom: 10px;
+        }
+
+        .contact-info p {
+            margin: 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .date {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .print-format {
+            padding: 1mm;
+            font-size: 11.0pt !important;
+        }
+
+        .print-format td {
+            vertical-align: middle !important;
+            padding-top: 3px !important; /* Adjust top padding */
+            padding-bottom: 3px !important; /* Adjust bottom padding */
+        }
+
+        th, td {
+            border: 1.5px solid #575454 !important; /* Set border width to 1.5px */
+            padding-left: 3px !important; /* Adjust left padding */
+            padding-right: 3px !important; /* Adjust right padding */
+        }
+
+        th {
+            background-color: transparent !important;
+            color: #000000 !important;
+            font-weight: bold !important;
+            text-align: left; /* Align header text to the left */
+        }
+
+        tr:last-child {
+            font-weight: bold !important;
+        }
+    </style>
+
+</head>
+<body>
+<div class="address">
+    <div style="text-align: center;font-size: 22px;font-weight: bold;">FINE TECH</div>
+    <div style="text-align: center;">SASI HOME # 6, PLOT G/18, CH. KHALIQ-UZ-ZAMAN ROAD, CLIFTON, BLOCK VIII, KARACHI
+    </div>
+</div>
+<div class="contact-info">
+    <div style="text-align: center;">Phone: +9221 32275951-4</div>
+    <div style="text-align: center;">Email: info@techtrix.com.pk</div>
+</div>
+<div class="header">
+    <p class="title">Sales By Brand Detail</p>
+    <p class="date">As of {%= frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string()) %}</p>
+</div>
+{% if (filters.from_date) { %}
+	<div class="text-center" style="border-top: 1.5px solid black;padding-top:8px;width: 30%; margin: 0 auto;">
+        <b>From Date : </b>{%= frappe.datetime.str_to_user(filters.from_date) %} <b>To Date : </b> {%= frappe.datetime.str_to_user(filters.to_date) %}
+	</div>
+{% } %}
+<table class="print-format">
+    <thead>
+    <tr>
+        <th style="width: 7%; text-align: left;">Brand</th>
+        <th style="width: 7%; text-align: left;">Date</th>
+        <th style="width: 7%; text-align: left;">Due Date</th>
+        <th style="width: 7%; text-align: left;">Trans. No.</th>
+        <th style="width: 7%; text-align: left;">Trans Type</th>
+        <th style="width: 10%; text-align: left;">Produc/Service</th>
+        <th style="width: 10%; text-align: left;">Customer</th>
+        <th style="width: 7%; text-align: left;">Account Manager</th>
+        <th style="width: 10%; text-align: left;">Description</th>
+        <th style="width: 7%; text-align: right;">Qty</th>
+        <th style="width: 3%; text-align: left;">Unit</th>
+        <th style="width: 7%; text-align: right;">Rate</th>
+        <th style="width: 7%; text-align: right;">Amount</th>
+        <th style="width: 7%; text-align: right;">Cost</th>
+        <th style="width: 7%; text-align: right;">Gross Profit</th>
+</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in data %}
+        <tr>
+            <td style="text-align: left;"><b>{{ row.brand }}</b></td>
+            <td style="text-align: left;">{%=frappe.datetime.str_to_user(row.posting_date) %}</td>
+            <td style="text-align: left;">{%=frappe.datetime.str_to_user(row.due_date) %}</td>
+            <td style="text-align: left;">{{ row.trans_no }}</td>
+            <td style="text-align: left;">{{ row.trans_type }}</td>
+            <td style="text-align: left;">{{ row.item_code }}</td>
+            <td style="text-align: left;">{{ row.customer }}</td>
+            <td style="text-align: left;">{{ row.user }}</td>
+            <td style="text-align: left;">{{ row.description }}</td>
+            <td style="text-align: right;">{{ row.qty }}</td>
+            <td style="text-align: left;">{{ row.uom }}</td>
+            <td style="text-align: right;">{{ row.rate }}</td>
+            <td style="text-align: right;">{{ row.amount }}</td>
+            <td style="text-align: right;">{{ row.cost }}</td>
+            <td style="text-align: right;">{{ row.gross_profit }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
