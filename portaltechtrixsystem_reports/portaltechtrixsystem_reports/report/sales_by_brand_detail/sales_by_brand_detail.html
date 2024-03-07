@@ -34,11 +34,6 @@
         }
 
         .print-format {
-            font-family: 'Open Sans', sans-serif;
-            margin-left: 0mm;
-            margin-top: 0mm;
-            margin-right: 0mm;
-            margin-bottom: 0mm;
             padding: 1mm;
             font-size: 11.0pt !important;
         }
@@ -80,13 +75,12 @@
 </div>
 <div class="header">
     <p class="title">Sales By Brand Detail</p>
-    <p class="date">As of {% = frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string()) %}</p>
+    <p class="date">As of {%= frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string()) %}</p>
 </div>
 {% if (filters.from_date) { %}
-<div class="text-center" style="border-top: 1.5px solid black;padding-top:8px;width: 30%; margin: 0 auto;">
-    <b>From Date : </b>{% = frappe.datetime.str_to_user(filters.from_date) %} <b>To Date
-    : </b> {% = frappe.datetime.str_to_user(filters.to_date) %}
-</div>
+	<div class="text-center" style="border-top: 1.5px solid black;padding-top:8px;width: 30%; margin: 0 auto;">
+        <b>From Date : </b>{%= frappe.datetime.str_to_user(filters.from_date) %} <b>To Date : </b> {%= frappe.datetime.str_to_user(filters.to_date) %}
+	</div>
 {% } %}
 <table class="print-format">
     <thead>
@@ -106,15 +100,15 @@
         <th style="width: 7%; text-align: right;">Amount</th>
         <th style="width: 7%; text-align: right;">Cost</th>
         <th style="width: 7%; text-align: right;">Gross Profit</th>
-        </th>
+</th>
     </tr>
     </thead>
     <tbody>
     {% for row in data %}
         <tr>
             <td style="text-align: left;"><b>{{ row.brand }}</b></td>
-            <td style="text-align: left;">{% =frappe.datetime.str_to_user(row.posting_date) %}</td>
-            <td style="text-align: left;">{% =frappe.datetime.str_to_user(row.due_date) %}</td>
+            <td style="text-align: left;">{%=frappe.datetime.str_to_user(row.posting_date) %}</td>
+            <td style="text-align: left;">{%=frappe.datetime.str_to_user(row.due_date) %}</td>
             <td style="text-align: left;">{{ row.trans_no }}</td>
             <td style="text-align: left;">{{ row.trans_type }}</td>
             <td style="text-align: left;">{{ row.item_code }}</td>
