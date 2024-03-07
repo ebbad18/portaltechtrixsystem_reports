@@ -81,12 +81,14 @@ def get_columns():
     return columns
 
 
-def get_conditions(filters, doctype):
+def get_conditions(filters):
     conditions = []
     if filters.get("from_date"):
-        conditions.append(f"{doctype}.posting_date >= %(from_date)s")
+        conditions.append(f"inv.posting_date >= %(from_date)s")
     if filters.get("to_date"):
-        conditions.append(f"{doctype}.posting_date <= %(to_date)s")
+        conditions.append(f"inv.posting_date <= %(to_date)s")
+    if filters.get("rate"):
+        conditions.append(f"stc.account_head = %(rate)s")
     return " AND ".join(conditions)
 
 
@@ -97,25 +99,29 @@ def get_data(filters):
             SELECT 
                 inv.posting_date AS trans_date,
                 inv.name AS trans_no,
-                '' AS ref_no,
+                inv.po_no AS ref_no,
                 inv.customer,
                 inv.company_tax_id,
                 inv.tax_id AS srb_gst_no,
                 inv.total_qty AS qty,
                 inv.total,
-                inv.total_taxes_and_charges AS tax,
+                stc.tax_amount AS tax,
                 inv.grand_total
             FROM 
-                `tabSales Invoice` AS inv
+                `tabSales Invoice` AS inv, `tabSales Taxes and Charges` AS stc
             WHERE 
-                {conditions} 
+                inv.name = stc.parent
                 AND 
                 inv.docstatus = 1
+                AND
+                inv.total_taxes_and_charges > 0
+                AND
+                {conditions} 
             GROUP BY 
                 inv.name
             ORDER BY 
                 inv.posting_date
-    """.format(conditions=get_conditions(filters, "inv"))
+    """.format(conditions=get_conditions(filters))
 
     tax_query_result = frappe.db.sql(tax_query, filters, as_dict=1)
     # TO REMOVE DUPLICATES

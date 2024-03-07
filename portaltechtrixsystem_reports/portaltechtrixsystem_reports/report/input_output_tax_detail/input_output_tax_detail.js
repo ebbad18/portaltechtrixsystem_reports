@@ -18,5 +18,16 @@ frappe.query_reports["Input Output Tax Detail"] = {
             default: frappe.datetime.get_today(),
             reqd: 1
         },
+        {
+            label: __("Tax Rate"),
+            fieldname: "rate",
+            fieldtype: "Link",
+            options: "Account",
+              "get_query": function () {
+                return {
+                    filters: {"account_type": "Tax", "root_type": 0}
+                };
+            }
+        }
     ]
 };
