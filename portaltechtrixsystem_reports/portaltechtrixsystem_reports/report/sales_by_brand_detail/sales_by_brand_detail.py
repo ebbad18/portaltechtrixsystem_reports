@@ -159,6 +159,61 @@ def get_data(filters):
 
     brand_query_result = frappe.db.sql(brand_query, filters, as_dict=1)
 
+    # Brand Wise Data Summarization and Appending Summary Row
+    current_brand = None
+    brand_data = []  # Collects data for each brand
+    brand_sum = {"qty": 0, "amount": 0, "cost": 0, "gross_profit": 0}  # Track sums for each brand
+
+    for record in brand_query_result:
+        # Convert to Decimal and handle None values
+        qty = Decimal(record.get('qty', 0) or 0)
+        amount = Decimal(record.get('amount', 0) or 0)
+        cost = Decimal(record.get('cost', 0) or 0)
+
+        # Calculate gross profit for the current record and round to 4 decimal places
+        record['gross_profit'] = round(amount - cost, 4)
+
+        # Check if we're still processing the same brand
+        if current_brand is None:
+            # First record, set the current brand
+            current_brand = record['brand']
+        elif record['brand'] != current_brand:
+            # We've hit a new brand, time to insert the summary for the previous brand
+            brand_data.append({
+                "description": "Total",
+                "qty": f"{brand_sum['qty']:.4f}",
+                "amount": f"{brand_sum['amount']:.4f}",
+                "cost": f"{brand_sum['cost']:.4f}",
+                "gross_profit": f"{brand_sum['gross_profit']:.4f}"
+            })
+            # Reset the sums for the new brand
+            current_brand = record['brand']
+            brand_sum = {"qty": 0, "amount": 0, "cost": 0, "gross_profit": 0}
+
+        # Update the sums with the current record
+        brand_sum["qty"] += qty
+        brand_sum["amount"] += amount
+        brand_sum["cost"] += cost
+        brand_sum["gross_profit"] += record['gross_profit']
+
+        # Append the current record to brand_data
+        brand_data.append(record)
+
+    # After looping through all records, insert a summary for the last brand
+    if current_brand is not None:
+        brand_data.append({
+            "description": "Total",
+            "qty": f"{brand_sum['qty']:.4f}",
+            "amount": f"{brand_sum['amount']:.4f}",
+            "cost": f"{brand_sum['cost']:.4f}",
+            "gross_profit": f"{brand_sum['gross_profit']:.4f}"
+        })
+
+    # Append brand_data to data
+    data.extend(brand_data)
+
+    # END
+
     # TO REMOVE DUPLICATES
     keys_to_check = ['brand']
     seen_values = []
@@ -173,50 +228,4 @@ def get_data(filters):
             seen_values.append(key_values)
 
     # END
-    # BRAND WISE SUMMARIZATION GROSS PROFIT CALCULATION
-    # Initialize variables to track current brand and sums
-    current_brand = None
-    brand_sum = {"amount": 0, "cost": 0, "gross_profit": 0}
-
-    # CALCULATE GROSS PROFIT
-    for i, record in enumerate(brand_query_result):
-        try:
-            amount = Decimal(record.amount) if record.amount else 0
-            cost = Decimal(record.cost) if record.cost else 0
-
-            record.gross_profit = round(amount - cost, 4) if amount and cost else 0
-
-            # Insert a row of sums before starting a new brand
-            if current_brand != record.brand:
-                if current_brand is not None:
-                    data.append({
-                        "brand": "",
-                        "amount": brand_sum["amount"],
-                        "cost": brand_sum["cost"],
-                        "gross_profit": brand_sum["gross_profit"]
-                    })
-                current_brand = record.brand
-                brand_sum = {"amount": 0, "cost": 0, "gross_profit": 0}
-
-            # Update sums
-            brand_sum["amount"] += amount
-            brand_sum["cost"] += cost
-            brand_sum["gross_profit"] += record.gross_profit
-
-            data.append(record)
-        except decimal.InvalidOperation as e:
-            frappe.log_error(f"Invalid value encountered: {e}")
-            continue
-
-    # Add the last sum row
-    if current_brand is not None:
-        data.append({
-            "brand": "",
-            "amount": brand_sum["amount"],
-            "cost": brand_sum["cost"],
-            "gross_profit": brand_sum["gross_profit"]
-        })
-    # END
-
-    # data.extend(brand_query_result)
     return data
