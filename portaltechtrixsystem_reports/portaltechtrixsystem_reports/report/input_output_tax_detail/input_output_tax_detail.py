@@ -108,15 +108,16 @@ def get_data(filters):
                 stc.tax_amount AS tax,
                 inv.grand_total
             FROM 
-                `tabSales Invoice` AS inv, `tabSales Taxes and Charges` AS stc
+                `tabSales Invoice` AS inv
+            JOIN 
+                `tabSales Taxes and Charges` AS stc ON inv.name = stc.parent
+            JOIN
+                `tabAccount` AS acc ON stc.account_head = acc.name
             WHERE 
-                inv.name = stc.parent
-                AND 
                 inv.docstatus = 1
-                AND
-                inv.total_taxes_and_charges > 0
-                AND
-                {conditions} 
+                AND inv.total_taxes_and_charges > 0
+                AND {conditions}
+                AND acc.account_type = 'Tax'
             GROUP BY 
                 inv.name
             ORDER BY 
@@ -125,7 +126,7 @@ def get_data(filters):
 
     tax_query_result = frappe.db.sql(tax_query, filters, as_dict=1)
     # TO REMOVE DUPLICATES
-    # keys_to_check = ['trans_date']
+    # keys_to_check = ['trans_no']
     # seen_values = []
     #
     # for entry in tax_query_result:

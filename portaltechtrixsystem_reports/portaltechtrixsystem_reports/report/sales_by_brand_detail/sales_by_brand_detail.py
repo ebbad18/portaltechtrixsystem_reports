@@ -135,7 +135,7 @@ def get_data(filters):
                 'Invoice' AS  trans_type,
                 item.item_code,
                 inv.customer,
-                inv.owner AS user,
+                inv.sales_person AS user,
                 item.description,
                 item.qty,
                 item.uom,
