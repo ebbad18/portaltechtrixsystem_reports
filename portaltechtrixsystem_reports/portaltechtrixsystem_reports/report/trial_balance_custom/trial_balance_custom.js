@@ -139,5 +139,5 @@ frappe.require("assets/erpnext/js/financial_statements.js", function() {
 		"initial_depth": 3
 	}
 
-	erpnext.utils.add_dimensions('Trial Balance Custom', 6);
+
 });
