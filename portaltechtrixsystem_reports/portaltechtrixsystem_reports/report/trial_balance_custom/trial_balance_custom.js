@@ -17,7 +17,7 @@ frappe.require("assets/erpnext/js/financial_statements.js", function() {
 				"label": __("Fiscal Year"),
 				"fieldtype": "Link",
 				"options": "Fiscal Year",
-				"default": erpnext.utils.get_fiscal_year(frappe.datetime.get_today()),
+				"default": frappe.defaults.get_user_default("year"),
 				"reqd": 1,
 				"on_change": function(query_report) {
 					var fiscal_year = query_report.get_values().fiscal_year;
@@ -139,5 +139,5 @@ frappe.require("assets/erpnext/js/financial_statements.js", function() {
 		"initial_depth": 3
 	}
 
-	erpnext.utils.add_dimensions('Trial Balance Custom', 6);
+	erpnext.utils.add_dimensions('Trial Balance', 6);
 });
