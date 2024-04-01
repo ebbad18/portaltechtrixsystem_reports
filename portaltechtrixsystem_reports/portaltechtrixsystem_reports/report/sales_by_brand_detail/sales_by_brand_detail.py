@@ -141,7 +141,7 @@ def get_data(filters):
                 item.uom,
                 item.rate,
                 item.amount,
-                ROUND(((SELECT valuation_rate FROM `tabStock Ledger Entry` WHERE item_code = item.item_code ORDER BY posting_date DESC, posting_time DESC LIMIT 1)*item.qty),4) AS cost,
+                ROUND(SELECT debit FROM `tabGL Entry` where voucher_no = inv.name and voucher_type = 'Sales Invoice') AS cost,
                 0 AS gross_profit
             FROM 
                 `tabSales Invoice` AS inv, `tabSales Invoice Item` AS item
