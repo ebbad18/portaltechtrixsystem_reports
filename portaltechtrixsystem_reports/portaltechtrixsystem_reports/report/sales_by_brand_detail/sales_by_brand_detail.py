@@ -141,13 +141,13 @@ def get_data(filters):
                 item.uom,
                 item.rate,
                 item.amount,
-                gl.debit AS cost,
+                ROUND(((SELECT valuation_rate FROM `tabStock Ledger Entry` WHERE item_code = item.item_code ORDER BY posting_date DESC, posting_time DESC LIMIT 1)*item.qty),4) AS cost,
                 0 AS gross_profit
             FROM 
-                `tabSales Invoice` AS inv
-                INNER JOIN `tabSales Invoice Item` AS item ON item.parent = inv.name
-                LEFT JOIN `tabGL Entry` AS gl ON gl.voucher_no = inv.name AND gl.voucher_type = 'Sales Invoice'
+                `tabSales Invoice` AS inv, `tabSales Invoice Item` AS item
             WHERE 
+                item.parent = inv.name 
+                AND
                 inv.is_return = 0 
                 AND 
                 inv.docstatus = 1
@@ -156,7 +156,6 @@ def get_data(filters):
             ORDER BY 
                 item.brand
     """.format(conditions=get_conditions(filters))
-
 
     brand_query_result = frappe.db.sql(brand_query, filters, as_dict=1)
 
