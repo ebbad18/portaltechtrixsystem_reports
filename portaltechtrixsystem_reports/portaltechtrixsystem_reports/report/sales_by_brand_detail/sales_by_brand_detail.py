@@ -141,13 +141,13 @@ def get_data(filters):
                 item.uom,
                 item.rate,
                 item.amount,
-                ROUND(SELECT debit FROM `tabGL Entry` where voucher_no = inv.name and voucher_type = 'Sales Invoice') AS cost,
+                gl.debit AS cost,
                 0 AS gross_profit
             FROM 
-                `tabSales Invoice` AS inv, `tabSales Invoice Item` AS item
+                `tabSales Invoice` AS inv
+                INNER JOIN `tabSales Invoice Item` AS item ON item.parent = inv.name
+                LEFT JOIN `tabGL Entry` AS gl ON gl.voucher_no = inv.name AND gl.voucher_type = 'Sales Invoice'
             WHERE 
-                item.parent = inv.name 
-                AND
                 inv.is_return = 0 
                 AND 
                 inv.docstatus = 1
@@ -156,6 +156,7 @@ def get_data(filters):
             ORDER BY 
                 item.brand
     """.format(conditions=get_conditions(filters))
+
 
     brand_query_result = frappe.db.sql(brand_query, filters, as_dict=1)
 
