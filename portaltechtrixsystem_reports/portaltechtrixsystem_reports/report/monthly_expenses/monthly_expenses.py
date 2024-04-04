@@ -65,7 +65,6 @@ def get_data(filters):
             WHERE
                 {conditions} 
                 AND `tabGL Entry`.is_cancelled = 0
-                AND `tabGL Entry`.debit > 0
                 AND `tabGL Entry`.account IN (SELECT `name` FROM `tabAccount` WHERE `root_type` = 'Expense')
             GROUP BY `tabGL Entry`.account
     """.format(conditions=get_conditions(filters, "GL Entry"))
