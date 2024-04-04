@@ -21,19 +21,7 @@ def get_columns():
             "width": 300
         },
         {
-            "label": "<b>Debit</b>",
-            "fieldname": "amount",
-            "fieldtype": "Currency",
-            "width": 200
-        },
-        {
-            "label": "<b>Credit</b>",
-            "fieldname": "credit",
-            "fieldtype": "Currency",
-            "width": 200
-        },
-        {
-            "label": "<b>Balance</b>",
+            "label": "<b>Amount</b>",
             "fieldname": "balance",
             "fieldtype": "Currency",
             "width": 200
