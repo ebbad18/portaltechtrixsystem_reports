@@ -105,7 +105,7 @@ def get_data(filters):
                 inv.tax_id AS srb_gst_no,
                 inv.total_qty AS qty,
                 inv.total,
-                stc.tax_amount AS tax,
+                COALESCE(SUM(stc.tax_amount), 0) AS tax,
                 inv.grand_total
             FROM 
                 `tabSales Invoice` AS inv
