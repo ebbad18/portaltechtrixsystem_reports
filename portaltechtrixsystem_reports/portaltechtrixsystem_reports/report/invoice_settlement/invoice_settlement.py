@@ -103,34 +103,36 @@ def get_data(filters):
     conditions = get_conditions(filters)
 
     stock_balance_query = f"""
-        SELECT 
-            inv.customer,
-            inv.name AS trans_no,
-            inv.posting_date AS trans_date,
-            pe.reference_no AS ref_no,
-            inv.due_date,
-            COALESCE(inv.currency, 0) AS currency,
-            COALESCE(inv.grand_total,0) AS inv_amount,
-            COALESCE(SUM(per.allocated_amount), 0) AS settled_amount,
-            COALESCE((inv.grand_total - SUM(per.allocated_amount)), 0) AS balance_amount,
-            COALESCE(DATEDIFF(MAX(pe.posting_date), inv.posting_date), 0) AS payment_days,
-            CASE
-                WHEN inv.grand_total = COALESCE(SUM(per.allocated_amount), 0) THEN 'Allocated'
-                WHEN COALESCE(SUM(per.allocated_amount), 0) > 0 AND COALESCE(SUM(per.allocated_amount), 0) < inv.grand_total THEN 'Partially Allocated'
-                WHEN COALESCE(SUM(per.allocated_amount), 0) < 1 THEN 'Not Allocated'
-            END AS status
-        FROM 
-            `tabSales Invoice` AS inv
-        LEFT JOIN 
-            `tabPayment Entry Reference` AS per ON inv.name = per.reference_name
-        LEFT JOIN 
-            `tabPayment Entry` AS pe ON per.parent = pe.name AND pe.status != 'Cancelled'
-        WHERE 
-            inv.is_return = 0 AND inv.docstatus = 1
-        GROUP BY 
-            inv.name
-        ORDER BY 
-            inv.customer
+    SELECT 
+        inv.customer,
+        inv.name AS trans_no,
+        inv.posting_date AS trans_date,
+        pe.reference_no AS ref_no,
+        inv.due_date,
+        COALESCE(inv.currency, 0) AS currency,
+        COALESCE(inv.grand_total, 0) AS inv_amount,
+        COALESCE(SUM(per.allocated_amount), 0) AS settled_amount,
+        COALESCE((inv.grand_total - SUM(per.allocated_amount)), 0) AS balance_amount,
+        COALESCE(DATEDIFF(MAX(pe.posting_date), inv.posting_date), 0) AS payment_days,
+        CASE
+            WHEN inv.grand_total = COALESCE(SUM(per.allocated_amount), 0) THEN 'Allocated'
+            WHEN COALESCE(SUM(per.allocated_amount), 0) > 0 AND COALESCE(SUM(per.allocated_amount), 0) < inv.grand_total THEN 'Partially Allocated'
+            WHEN COALESCE(SUM(per.allocated_amount), 0) < 1 THEN 'Not Allocated'
+        END AS status
+    FROM 
+        `tabSales Invoice` AS inv
+    LEFT JOIN 
+        `tabPayment Entry Reference` AS per ON inv.name = per.reference_name
+    LEFT JOIN 
+        `tabPayment Entry` AS pe ON per.parent = pe.name 
+    WHERE 
+        inv.is_return = 0 
+        AND inv.docstatus = 1
+        AND pe.docstatus = 1 
+    GROUP BY 
+        inv.name
+    ORDER BY 
+        inv.customer
     """
 
 
