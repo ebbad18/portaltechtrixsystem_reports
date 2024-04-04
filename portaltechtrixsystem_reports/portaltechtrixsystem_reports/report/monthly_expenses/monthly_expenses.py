@@ -21,8 +21,20 @@ def get_columns():
             "width": 300
         },
         {
-            "label": "<b>Amount</b>",
+            "label": "<b>Debit</b>",
             "fieldname": "amount",
+            "fieldtype": "Currency",
+            "width": 200
+        },
+        {
+            "label": "<b>Credit</b>",
+            "fieldname": "credit",
+            "fieldtype": "Currency",
+            "width": 200
+        },
+        {
+            "label": "<b>Balance</b>",
+            "fieldname": "balance",
             "fieldtype": "Currency",
             "width": 200
         }
@@ -45,7 +57,9 @@ def get_data(filters):
     expenses = """
             SELECT
                 `tabGL Entry`.account,
-                SUM(`tabGL Entry`.debit) AS amount
+                SUM(`tabGL Entry`.debit) AS amount,
+                SUM(`tabGL Entry`.credit) AS credit,
+                SUM(`tabGL Entry`.debit) - SUM(`tabGL Entry`.credit) AS balance
             FROM
                 `tabGL Entry`
             WHERE
