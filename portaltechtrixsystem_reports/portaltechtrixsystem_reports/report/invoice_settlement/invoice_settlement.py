@@ -124,7 +124,7 @@ def get_data(filters):
         LEFT JOIN 
             `tabPayment Entry Reference` AS per ON inv.name = per.reference_name
         LEFT JOIN 
-            `tabPayment Entry` AS pe ON per.parent = pe.name AND pe.docstatus = 1
+            `tabPayment Entry` AS pe ON per.parent = pe.name AND pe.status != 'Cancelled'
         WHERE 
             inv.is_return = 0 AND inv.docstatus = 1
         GROUP BY 
