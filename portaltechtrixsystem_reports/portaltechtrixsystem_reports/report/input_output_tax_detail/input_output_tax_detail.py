@@ -41,7 +41,7 @@ def get_columns():
         },
         {
             "label": "<b>NTN No.</b>",
-            "fieldname": "company_tax_id",
+            "fieldname": "tax_id",
             "fieldtype": "Data",
             "width": 120
         },
@@ -101,7 +101,7 @@ def get_data(filters):
                 inv.name AS trans_no,
                 inv.po_no AS ref_no,
                 inv.customer,
-                inv.company_tax_id,
+                inv.tax_id,
                 inv.tax_id AS srb_gst_no,
                 inv.total_qty AS qty,
                 inv.total,
