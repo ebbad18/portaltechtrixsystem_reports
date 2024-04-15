@@ -115,7 +115,7 @@ def get_data(filters):
                 `tabAccount` AS acc ON stc.account_head = acc.name
             WHERE 
                 inv.docstatus = 1
-                AND inv.total_taxes_and_charges > 0
+                AND ABS(inv.total_taxes_and_charges) > 0
                 AND {conditions}
                 AND acc.account_type = 'Tax'
             GROUP BY 
