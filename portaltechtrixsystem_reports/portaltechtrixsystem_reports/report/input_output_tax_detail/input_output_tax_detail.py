@@ -104,9 +104,9 @@ def get_data(filters):
                 inv.tax_id,
                 inv.tax_id AS srb_gst_no,
                 inv.total_qty AS qty,
-                inv.total,
-                COALESCE(SUM(stc.tax_amount), 0) AS tax,
-                inv.grand_total
+                CASE WHEN inv.currency = 'USD' THEN inv.total * inv.conversion_rate ELSE inv.total END AS total,
+                CASE WHEN inv.currency = 'USD' THEN COALESCE(SUM(stc.tax_amount), 0) * inv.conversion_rate ELSE COALESCE(SUM(stc.tax_amount), 0) END AS tax,
+                CASE WHEN inv.currency = 'USD' THEN inv.grand_total * inv.conversion_rate ELSE inv.grand_total END AS grand_total
             FROM 
                 `tabSales Invoice` AS inv
             JOIN 
