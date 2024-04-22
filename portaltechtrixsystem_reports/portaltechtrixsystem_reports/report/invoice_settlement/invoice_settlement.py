@@ -138,17 +138,17 @@ def get_data(filters):
 
     stock_balance_result = frappe.db.sql(stock_balance_query, filters, as_dict=1)
     # TO REMOVE DUPLICATES
-    keys_to_check = ['customer']
-    seen_values = []
-
-    for entry in stock_balance_result:
-        key_values = tuple(entry[key] for key in keys_to_check)
-
-        if key_values in seen_values:
-            for key in keys_to_check:
-                entry[key] = None
-        else:
-            seen_values.append(key_values)
+    # keys_to_check = ['customer']
+    # seen_values = []
+    #
+    # for entry in stock_balance_result:
+    #     key_values = tuple(entry[key] for key in keys_to_check)
+    #
+    #     if key_values in seen_values:
+    #         for key in keys_to_check:
+    #             entry[key] = None
+    #     else:
+    #         seen_values.append(key_values)
 
     # END
     data.extend(stock_balance_result)
