@@ -163,6 +163,7 @@ def get_data(filters):
     current_brand = None
     brand_data = []  # Collects data for each brand
     brand_sum = {"qty": 0, "amount": 0, "cost": 0, "gross_profit": 0}  # Track sums for each brand
+    total_sum = {"qty": 0, "amount": 0, "cost": 0, "gross_profit": 0}  # Track total sums
 
     for record in brand_query_result:
         # Convert to Decimal and handle None values
@@ -186,6 +187,9 @@ def get_data(filters):
                 "cost": f"{brand_sum['cost']:.4f}",
                 "gross_profit": f"{brand_sum['gross_profit']:.4f}"
             })
+            # Update total sum
+            for key, value in brand_sum.items():
+                total_sum[key] += value
             # Reset the sums for the new brand
             current_brand = record['brand']
             brand_sum = {"qty": 0, "amount": 0, "cost": 0, "gross_profit": 0}
@@ -208,9 +212,21 @@ def get_data(filters):
             "cost": f"{brand_sum['cost']:.4f}",
             "gross_profit": f"{brand_sum['gross_profit']:.4f}"
         })
+        # Update total sum
+        for key, value in brand_sum.items():
+            total_sum[key] += value
 
     # Append brand_data to data
     data.extend(brand_data)
+
+    # Append total sum to data
+    data.append({
+        "description": "Grand Total",
+        "qty": f"{total_sum['qty']:.4f}",
+        "amount": f"{total_sum['amount']:.4f}",
+        "cost": f"{total_sum['cost']:.4f}",
+        "gross_profit": f"{total_sum['gross_profit']:.4f}"
+    })
 
     # END
 
