@@ -221,7 +221,7 @@ def get_data(filters):
 
     # Append total sum to data
     data.append({
-        "description": "Grand Total",
+        "description": "<b>Grand Total</b>",
         "qty": f"{total_sum['qty']:.4f}",
         "amount": f"{total_sum['amount']:.4f}",
         "cost": f"{total_sum['cost']:.4f}",
