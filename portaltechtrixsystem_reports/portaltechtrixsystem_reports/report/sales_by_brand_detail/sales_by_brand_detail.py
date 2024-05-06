@@ -215,17 +215,17 @@ def get_data(filters):
     # END
 
     # TO REMOVE DUPLICATES
-    keys_to_check = ['brand']
-    seen_values = []
-
-    for entry in brand_query_result:
-        key_values = tuple(entry[key] for key in keys_to_check)
-
-        if key_values in seen_values:
-            for key in keys_to_check:
-                entry[key] = None
-        else:
-            seen_values.append(key_values)
+    # keys_to_check = ['brand']
+    # seen_values = []
+    #
+    # for entry in brand_query_result:
+    #     key_values = tuple(entry[key] for key in keys_to_check)
+    #
+    #     if key_values in seen_values:
+    #         for key in keys_to_check:
+    #             entry[key] = None
+    #     else:
+    #         seen_values.append(key_values)
 
     # END
     return data
