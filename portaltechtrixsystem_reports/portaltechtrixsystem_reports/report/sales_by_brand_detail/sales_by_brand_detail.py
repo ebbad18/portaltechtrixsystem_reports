@@ -147,8 +147,6 @@ def get_data(filters):
                 `tabSales Invoice` AS inv, `tabSales Invoice Item` AS item
             WHERE 
                 item.parent = inv.name 
-                AND
-                inv.is_return = 0 
                 AND 
                 inv.docstatus = 1
                 AND
